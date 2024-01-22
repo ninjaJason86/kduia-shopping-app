@@ -3,51 +3,38 @@ import React, { createContext, useReducer } from 'react';
 // 5. the reducer - this is used to update the state, based on the action
 
 export function AppReducer(state, action) {
-    let newExpenses = [];
+    let newState = { ...state };
 
     switch (action.type) {
         case "ADD_QUANTITY":
-            let updatedQuantity = false;
-            state.expenses.forEach((expense) => {
+            newState.expenses.forEach((expense) => {
                 if (expense.name === action.payload.name) {
-                    expense.quantity = expense.quantity + action.payload.quantity;
-                    updatedQuantity = true;
+                    expense.quantity += action.payload.quantity;
                 }
-                newExpenses.push(expense);
             });
-            state.expenses = newExpenses;
             action.type = "DONE";
-            return state;
-
+            return newState;
         case "REDUCE_QUANTITY":
-            state.expenses.forEach((expense) => {
+            newState.expenses.forEach((expense) => {
                 if (expense.name === action.payload.name) {
-                    expense.quantity = expense.quantity - action.payload.quantity;
+                    expense.quantity -= action.payload.quantity;
                 }
                 expense.quantity = expense.quantity < 0 ? 0 : expense.quantity;
-                newExpenses.push(expense);
             });
-            state.expenses = newExpenses;
             action.type = "DONE";
-            return state;
-
+            return newState;
         case "DELETE_ITEM":
-            state.expenses.forEach((expense) => {
+            newState.expenses.forEach((expense) => {
                 if (expense.name === action.payload.name) {
                     expense.quantity = 0;
                 }
-                newExpenses.push(expense);
             });
-
-            state.expenses = newExpenses;
             action.type = "DONE";
-            return state;
-
+            return newState;
         case "CHANGE_LOCATION":
-            state.location = action.payload;
+            newState.location = action.payload;
             action.type = "DONE";
-            return state;
-
+            return newState;
         default:
             return state;
     }
@@ -62,6 +49,7 @@ const initialState = {
         { id: "Dinner set", name: 'Dinner set', quantity: 0, unitPrice: 600 },
         { id: "Bags", name: 'Bags', quantity: 0, unitPrice: 200 },
     ],
+    CartValue: 0,
     Location: "￡",
 };
 
